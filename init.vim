@@ -14,6 +14,7 @@ Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'tpope/vim-fugitive'
+Plug 'sindrets/diffview.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'MunifTanjim/nui.nvim'
 Plug 'nvim-neo-tree/neo-tree.nvim', { 'branch': 'v3.x' }
@@ -87,6 +88,16 @@ EOF
 lua << EOF
 
 require('nvim-web-devicons').setup {}
+
+EOF
+
+" -----------------------------------------------------------------------------
+" gitsigns Config
+" -----------------------------------------------------------------------------
+
+lua << EOF
+
+require('gitsigns').setup {}
 
 EOF
 
@@ -475,6 +486,10 @@ func! ActionMenuCodeActionMenu()
     \ { 'separator': v:true },
     \ { 'word': 'OutLine', 'user_data': 'AerialToggle!' },
     \ { 'word': 'Format Code', 'user_data': 'Format' },
+    \ { 'separator': v:true },
+    \ { 'word': 'Open Git Diff', 'user_data': 'DiffviewOpen' },
+    \ { 'word': 'Open Git History', 'user_data': 'DiffviewFileHistory' },
+    \ { 'word': 'Close Git View', 'user_data': 'DiffviewClose' },
     \ ]
 
   call actionmenu#open(
