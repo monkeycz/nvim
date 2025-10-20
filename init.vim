@@ -498,16 +498,17 @@ endfunc
 
 func! ActionMenuCodeActionMenu()
   let l:items = [
-    \ { 'word': 'Hover', 'user_data': 'call CocActionAsync("doHover")' },
-    \ { 'word': 'Definition', 'user_data': 'call CocAction("jumpDefinition")' },
-    \ { 'word': 'Type Definition', 'user_data': 'call CocAction("jumpTypeDefinition")' },
-    \ { 'word': 'References', 'user_data': 'call CocAction("jumpReferences")' },
-    \ { 'word': 'Code Actions', 'user_data': 'call ActionMenuCodeActions()' },
-    \ { 'word': 'Quickfix', 'user_data': 'call CocAction("doQuickfix")' },
-    \ { 'word': 'Rename', 'user_data': 'call CocActionAsync("rename")' },
+    \ { 'word': 'Hover', 'user_data': 'call CocActionAsync("doHover")', 'shortcut': '1' },
+    \ { 'word': 'Definition', 'user_data': 'call CocAction("jumpDefinition")', 'shortcut': '2' },
+    \ { 'word': 'Type Definition', 'user_data': 'call CocAction("jumpTypeDefinition")', 'shortcut': '3' },
+    \ { 'word': 'References', 'user_data': 'call CocAction("jumpReferences")', 'shortcut': '4' },
+    \ { 'word': 'Code Actions', 'user_data': 'call ActionMenuCodeActions()', 'shortcut': '5' },
+    \ { 'word': 'Quickfix', 'user_data': 'call CocAction("doQuickfix")', 'shortcut': '6' },
+    \ { 'word': 'Rename', 'user_data': 'call CocActionAsync("rename")', 'shortcut': '7' },
     \ { 'separator': v:true },
-    \ { 'word': 'OutLine', 'user_data': 'AerialToggle!' },
-    \ { 'word': 'Format Code', 'user_data': 'Format' },
+    \ { 'word': 'OutLine', 'user_data': 'AerialToggle!', 'shortcut': '8' },
+    \ { 'separator': v:true },
+    \ { 'word': 'Format Code', 'user_data': 'Format', 'shortcut': '9' },
     \ ]
 
   call actionmenu#open(
@@ -547,12 +548,12 @@ EOF
 
 func! ActionMenuGitMenu()
   let l:items = [
-    \ { 'word': 'Toggle Git View', 'user_data': 'lua GitViewToggle()' },
-    \ { 'word': 'Open Git Diff', 'user_data': 'DiffviewOpen' },
-    \ { 'word': 'Open Git History', 'user_data': 'DiffviewFileHistory' },
+    \ { 'word': 'Toggle Git View', 'user_data': 'lua GitViewToggle()', 'shortcut': '1' },
+    \ { 'word': 'Open Git Diff', 'user_data': 'DiffviewOpen', 'shortcut': '2' },
+    \ { 'word': 'Open Git History', 'user_data': 'DiffviewFileHistory', 'shortcut': '3' },
     \ { 'separator': v:true },
-    \ { 'word': 'Goto Next Diff', 'user_data': 'Gitsigns next_hunk' },
-    \ { 'word': 'Goto Prev Diff', 'user_data': 'Gitsigns prev_hunk' },
+    \ { 'word': 'Goto Next Diff', 'user_data': 'Gitsigns next_hunk', 'shortcut': '4' },
+    \ { 'word': 'Goto Prev Diff', 'user_data': 'Gitsigns prev_hunk', 'shortcut': '5' },
     \ ]
 
   call actionmenu#open(
@@ -566,15 +567,19 @@ inoremap <silent><leader>g <ESC>:call ActionMenuGitMenu()<CR>
 
 func! ActionMenuShortcutMenu()
   let l:items = [
-    \ { 'word': 'Hide Highlight', 'user_data': 'call feedkeys(":nohlsearch\<CR>:pclose\<CR>")' },
-    \ { 'word': 'Files List', 'user_data': 'call feedkeys(":CocList files\<CR>")' },
-    \ { 'word': 'Buffers List', 'user_data': 'call feedkeys(":CocList buffers\<CR>")' },
-    \ { 'word': 'Windows List', 'user_data': 'call feedkeys(":CocList windows\<CR>")' },
-    \ { 'word': 'Toggle Terminal', 'user_data': 'call feedkeys(":ToggleTerm\<CR>")' },
-    \ { 'word': 'Toggle File Explorer', 'user_data': 'call feedkeys(":Neotree toggle\<CR>")' },
-    \ { 'word': 'New Window', 'user_data': 'call feedkeys(":vs\<CR>")' },
-    \ { 'word': 'Close Window', 'user_data': 'call feedkeys(":close\<CR>")' },
-    \ { 'word': 'New File', 'user_data': 'call feedkeys(":new\<CR>")' },
+    \ { 'word': 'New Window', 'user_data': 'call feedkeys(":vs\<CR>")', 'shortcut': '1' },
+    \ { 'word': 'Close Window', 'user_data': 'call feedkeys(":close\<CR>")', 'shortcut': '2' },
+    \ { 'separator': v:true },
+    \ { 'word': 'New File', 'user_data': 'call feedkeys(":new\<CR>")', 'shortcut': '3' },
+    \ { 'separator': v:true },
+    \ { 'word': 'Toggle Terminal', 'user_data': 'call feedkeys(":ToggleTerm\<CR>")', 'shortcut': '4' },
+    \ { 'word': 'Toggle File Explorer', 'user_data': 'call feedkeys(":Neotree toggle\<CR>")', 'shortcut': '5' },
+    \ { 'separator': v:true },
+    \ { 'word': 'Files List', 'user_data': 'call feedkeys(":CocList files\<CR>")', 'shortcut': '6' },
+    \ { 'word': 'Buffers List', 'user_data': 'call feedkeys(":CocList buffers\<CR>")', 'shortcut': '7' },
+    \ { 'word': 'Windows List', 'user_data': 'call feedkeys(":CocList windows\<CR>")', 'shortcut': '8' },
+    \ { 'separator': v:true },
+    \ { 'word': 'Hide Highlight', 'user_data': 'call feedkeys(":nohlsearch\<CR>:pclose\<CR>")', 'shortcut': '9' },
     \ ]
 
   call actionmenu#open(
@@ -722,6 +727,12 @@ endif
 lua << EOF
 
 require('telescope').setup {
+  defaults = {
+    layout_config = {
+      width = 0.8,
+      height = 0.8,
+    },
+  },
   extensions = {
     fzf = {
       fuzzy = true,
