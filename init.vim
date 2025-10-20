@@ -9,15 +9,18 @@
 " and run `:PlugInstall`, `:PlugUpdate`, `:PlugUpgrade`
 call plug#begin('~/.vim/plugged')
 
+Plug 'nvim-tree/nvim-web-devicons'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'MunifTanjim/nui.nvim'
+Plug 'kkharji/sqlite.lua'
+
 " Plug 'NLKNguyen/papercolor-theme'
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
-Plug 'nvim-tree/nvim-web-devicons'
+
 Plug 'lewis6991/gitsigns.nvim'
 " Plug 'tpope/vim-fugitive'
 Plug 'NeogitOrg/neogit'
 Plug 'sindrets/diffview.nvim'
-Plug 'nvim-lua/plenary.nvim'
-Plug 'MunifTanjim/nui.nvim'
 Plug 'nvim-neo-tree/neo-tree.nvim', { 'branch': 'v3.x' }
 " Plug 'nvim-tree/nvim-tree.lua'
 " Plug 'preservim/nerdtree'
@@ -36,7 +39,6 @@ Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 " run `:CocInstall coc-lists coc-tsserver coc-json coc-rust-analyzer coc-pyright coc-clangd coc-lua coc-git` `:CocUpdate`
 Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release' }
-Plug 'kkharji/sqlite.lua'
 Plug 'AckslD/nvim-neoclip.lua'
 Plug 'tpope/vim-obsession'
 Plug 'stevearc/aerial.nvim'
