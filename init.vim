@@ -13,7 +13,8 @@ call plug#begin('~/.vim/plugged')
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'lewis6991/gitsigns.nvim'
-Plug 'tpope/vim-fugitive'
+" Plug 'tpope/vim-fugitive'
+Plug 'NeogitOrg/neogit'
 Plug 'sindrets/diffview.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'MunifTanjim/nui.nvim'
@@ -98,6 +99,19 @@ EOF
 lua << EOF
 
 require('gitsigns').setup {}
+
+vim.keymap.set('n', 'g>', '<cmd>Gitsigns next_hunk<cr>', { noremap = true, silent = true })
+vim.keymap.set('n', 'g<', '<cmd>Gitsigns prev_hunk<cr>', { noremap = true, silent = true })
+
+EOF
+
+" -----------------------------------------------------------------------------
+" Neogit Config
+" -----------------------------------------------------------------------------
+
+lua << EOF
+
+require('neogit').setup {}
 
 EOF
 
@@ -457,6 +471,13 @@ EOF
 
 let s:code_actions = []
 
+func! ActionMenuCodeActionsCallback(index, item) abort
+  if a:index >= 0
+    let l:selected_code_action = s:code_actions[a:index]
+    let l:response = CocAction('doCodeAction', l:selected_code_action)
+  endif
+endfunc
+
 func! ActionMenuCodeActions() abort
   if coc#float#has_float()
     call coc#float#close_all()
@@ -467,10 +488,9 @@ func! ActionMenuCodeActions() abort
   call actionmenu#open(l:menu_items, 'ActionMenuCodeActionsCallback')
 endfunc
 
-func! ActionMenuCodeActionsCallback(index, item) abort
+func! ActionMenuItemCallback(index, item)
   if a:index >= 0
-    let l:selected_code_action = s:code_actions[a:index]
-    let l:response = CocAction('doCodeAction', l:selected_code_action)
+    execute a:item['user_data']
   endif
 endfunc
 
@@ -486,26 +506,61 @@ func! ActionMenuCodeActionMenu()
     \ { 'separator': v:true },
     \ { 'word': 'OutLine', 'user_data': 'AerialToggle!' },
     \ { 'word': 'Format Code', 'user_data': 'Format' },
-    \ { 'separator': v:true },
-    \ { 'word': 'Open Git Diff', 'user_data': 'DiffviewOpen' },
-    \ { 'word': 'Open Git History', 'user_data': 'DiffviewFileHistory' },
-    \ { 'word': 'Close Git View', 'user_data': 'DiffviewClose' },
     \ ]
 
   call actionmenu#open(
     \ l:items,
-    \ { index, item -> ActionMenuCodeActionMenuCallback(index, item) }
+    \ { index, item -> ActionMenuItemCallback(index, item) }
     \ )
-endfunc
-
-func! ActionMenuCodeActionMenuCallback(index, item)
-  if a:index >= 0
-    execute a:item['user_data']
-  endif
 endfunc
 
 nnoremap <silent><leader>; :call ActionMenuCodeActionMenu()<CR>
 inoremap <silent><leader>; <ESC>:call ActionMenuCodeActionMenu()<CR>
+
+lua << EOF
+
+local neogit = require('neogit')
+
+function GitViewToggle()
+  local tab = vim.api.nvim_get_current_tabpage()
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(tab)) do
+    local ok, buf = pcall(vim.api.nvim_win_get_buf, win)
+    if ok then
+        local name = vim.api.nvim_buf_get_name(buf)
+        -- vim.api.nvim_echo({{vim.inspect(name)}}, true, {})
+        if name:match("NeogitStatus") then
+          -- vim.api.nvim_win_close(win, true)
+          neogit.close()
+          return
+        elseif name:match("DiffviewFilePanel") or name:match("DiffviewFileHistoryPanel") then
+          vim.cmd("DiffviewClose")
+          return
+        end
+    end
+  end
+  neogit.open({ kind = "tab" })  -- "tab" / "replace" / "split"
+end
+
+EOF
+
+func! ActionMenuGitMenu()
+  let l:items = [
+    \ { 'word': 'Toggle Git View', 'user_data': 'lua GitViewToggle()' },
+    \ { 'word': 'Open Git Diff', 'user_data': 'DiffviewOpen' },
+    \ { 'word': 'Open Git History', 'user_data': 'DiffviewFileHistory' },
+    \ { 'separator': v:true },
+    \ { 'word': 'Goto Next Diff', 'user_data': 'Gitsigns next_hunk' },
+    \ { 'word': 'Goto Prev Diff', 'user_data': 'Gitsigns prev_hunk' },
+    \ ]
+
+  call actionmenu#open(
+    \ l:items,
+    \ { index, item -> ActionMenuItemCallback(index, item) }
+    \ )
+endfunc
+
+nnoremap <silent><leader>g :call ActionMenuGitMenu()<CR>
+inoremap <silent><leader>g <ESC>:call ActionMenuGitMenu()<CR>
 
 func! ActionMenuShortcutMenu()
   let l:items = [
@@ -522,14 +577,8 @@ func! ActionMenuShortcutMenu()
 
   call actionmenu#open(
     \ l:items,
-    \ { index, item -> ActionMenuShortcutMenuCallback(index, item) }
+    \ { index, item -> ActionMenuItemCallback(index, item) }
     \ )
-endfunc
-
-func! ActionMenuShortcutMenuCallback(index, item)
-  if a:index >= 0
-    execute a:item['user_data']
-  endif
 endfunc
 
 nnoremap <silent><leader>' :call ActionMenuShortcutMenu()<CR>
