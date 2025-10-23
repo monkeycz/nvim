@@ -36,7 +36,7 @@ Plug 's1n7ax/nvim-window-picker'
 Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
 " run `:TSInstall vim vimdoc lua c rust python javascript toml markdown markdown_inline` `:TSUpdate`
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
-" run `:CocInstall coc-lists coc-tsserver coc-json coc-rust-analyzer coc-pyright coc-clangd coc-lua coc-git` `:CocUpdate`
+" run `:CocInstall coc-lists coc-tsserver coc-json coc-rust-analyzer coc-pyright coc-clangd coc-lua`:CocUpdate`
 Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release' }
 Plug 'AckslD/nvim-neoclip.lua'
@@ -750,7 +750,6 @@ let g:coc_global_extensions = [
 \   'coc-pyright',  
 \   'coc-clangd',  
 \   'coc-lua',  
-\   'coc-git', 
 \ ]
 
 function! CheckBackspace() abort
