@@ -742,6 +742,17 @@ EOF
 " CoC Config
 " -----------------------------------------------------------------------------
 
+let g:coc_global_extensions = [
+\   'coc-lists', 
+\   'coc-tsserver',  
+\   'coc-json', 
+\   'coc-rust-analyzer', 
+\   'coc-pyright',  
+\   'coc-clangd',  
+\   'coc-lua',  
+\   'coc-git', 
+\ ]
+
 function! CheckBackspace() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
