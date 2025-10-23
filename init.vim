@@ -34,7 +34,7 @@ Plug 'akinsho/bufferline.nvim', { 'tag': '*' }
 Plug 'monkeycz/actionmenu.nvim'
 Plug 's1n7ax/nvim-window-picker'
 Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
-" run `:TSInstall vim lua c rust python javascript toml` `:TSUpdate`
+" run `:TSInstall vim vimdoc lua c rust python javascript toml markdown markdown_inline` `:TSUpdate`
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 " run `:CocInstall coc-lists coc-tsserver coc-json coc-rust-analyzer coc-pyright coc-clangd coc-lua coc-git` `:CocUpdate`
 Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
@@ -719,7 +719,7 @@ EOF
 lua << EOF
 
 require('nvim-treesitter.configs').setup {
-    ensure_installed = {"vim", "lua", "c", "rust", "python", "javascript", "toml"},
+    ensure_installed = { "vim", "vimdoc", "lua", "c", "rust", "python", "javascript", "toml", "markdown", "markdown_inline" },
     sync_install = false,
     auto_install = true,
     highlight = {
