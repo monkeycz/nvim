@@ -6,5 +6,8 @@
   // "rust-analyzer.inlayHints.bindingModeHints.enable": true,
   // "rust-analyzer.inlayHints.closureReturnTypeHints.enable": "always",
   // "rust-analyzer.inlayHints.discriminantHints.enable": "always",
-  "rust-analyzer.diagnostics.disabled": ["unresolved-proc-macro"]
+  "rust-analyzer.diagnostics.disabled": ["unresolved-proc-macro"],
+  "git.enableGutters": false,
+  "git.addGBlameToVirtualText": false,
+  "git.enableGlobalStatus": false,
 }
