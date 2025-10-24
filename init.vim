@@ -38,6 +38,7 @@ Plug 'monkeycz/actionmenu.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release' }
 Plug 'AckslD/nvim-neoclip.lua'
+Plug 'nvim-pack/nvim-spectre'
 
 " UI Assist
 Plug 's1n7ax/nvim-window-picker'
@@ -1041,6 +1042,54 @@ require("markview").setup {
     enable = false,
   },
 }
+
+EOF
+
+" -----------------------------------------------------------------------------
+" Spectre Config
+" -----------------------------------------------------------------------------
+
+lua << EOF
+
+vim.cmd([[
+highlight SpectreSearch guibg=#4C8C6C guifg=#F8F8F2 gui=bold
+highlight SpectreReplace guibg=#C14953 guifg=#F8F8F2 gui=bold
+highlight SpectrePreview guibg=#3A3A3A guifg=#D8D8D2 gui=bold
+]])
+
+require("spectre").setup({
+  highlight = {
+    ui      = "String",
+    search  = "SpectreSearch",
+    replace = "SpectreReplace",
+    preview = "SpectrePreview",
+  },
+})
+
+vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").toggle()<CR>', {
+    desc = "Toggle Spectre"
+})
+
+vim.keymap.set('n', '<leader>sw', '<cmd>lua require("spectre").open_visual({select_word=true})<CR>', {
+    desc = "Search current word"
+})
+
+vim.keymap.set('v', '<leader>sw', '<esc><cmd>lua require("spectre").open_visual()<CR>', {
+    desc = "Search current word"
+})
+
+vim.keymap.set('n', '<leader>sp', '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', {
+    desc = "Search on current file"
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "spectre_panel",
+  callback = function()
+    vim.keymap.set("n", "q", function()
+      require("spectre").close()
+    end, { buffer = true, silent = true })
+  end,
+})
 
 EOF
 
