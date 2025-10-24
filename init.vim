@@ -662,7 +662,7 @@ func! ActionMenuShortcutMenu()
     \ { 'word': 'New Window', 'user_data': 'call feedkeys(":vs\<CR>")', 'shortcut': '1' },
     \ { 'word': 'Close Window', 'user_data': 'call feedkeys(":close\<CR>")', 'shortcut': '2' },
     \ { 'separator': v:true },
-    \ { 'word': 'New File', 'user_data': 'call feedkeys(":new\<CR>")', 'shortcut': '3' },
+    \ { 'word': 'New File', 'user_data': 'call feedkeys(":enew\<CR>")', 'shortcut': '3' },
     \ { 'separator': v:true },
     \ { 'word': 'Toggle Terminal', 'user_data': 'call feedkeys(":ToggleTerm\<CR>")', 'shortcut': '4' },
     \ { 'word': 'Toggle File Explorer', 'user_data': 'call feedkeys(":Neotree toggle\<CR>")', 'shortcut': '5' },
