@@ -9,44 +9,57 @@
 " and run `:PlugInstall`, `:PlugUpdate`, `:PlugUpgrade`
 call plug#begin('~/.vim/plugged')
 
+" Dependencies
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'MunifTanjim/nui.nvim'
 Plug 'kkharji/sqlite.lua'
 
+" Themes
 " Plug 'NLKNguyen/papercolor-theme'
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 
-Plug 'lewis6991/gitsigns.nvim'
-" Plug 'tpope/vim-fugitive'
-Plug 'NeogitOrg/neogit'
-Plug 'sindrets/diffview.nvim'
+" UI Frame
+" Plug 'romgrk/barbar.nvim'
+Plug 'akinsho/bufferline.nvim', { 'tag': '*' }
+Plug 'nvim-mini/mini.bufremove'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'edkolev/tmuxline.vim'
 Plug 'nvim-neo-tree/neo-tree.nvim', { 'branch': 'v3.x' }
 " Plug 'nvim-tree/nvim-tree.lua'
 " Plug 'preservim/nerdtree'
 Plug 'akinsho/toggleterm.nvim', { 'tag' : '*' }
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'edkolev/tmuxline.vim'
-" Plug 'romgrk/barbar.nvim'
-Plug 'akinsho/bufferline.nvim', { 'tag': '*' }
+Plug 'stevearc/aerial.nvim'
+
+" UI Popup
 " Plug 'kizza/actionmenu.nvim'
 Plug 'monkeycz/actionmenu.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release' }
+Plug 'AckslD/nvim-neoclip.lua'
+
+" UI Assist
 Plug 's1n7ax/nvim-window-picker'
+" Plug 'nvim-mini/mini.animate'
+Plug 'folke/which-key.nvim'
+
+" Language Support
 Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
 " run `:TSInstall vim vimdoc lua c rust python javascript toml markdown markdown_inline` `:TSUpdate`
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 " run `:CocInstall coc-lists coc-tsserver coc-json coc-rust-analyzer coc-pyright coc-clangd coc-lua`:CocUpdate`
-Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
-Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release' }
-Plug 'AckslD/nvim-neoclip.lua'
-Plug 'tpope/vim-obsession'
-Plug 'stevearc/aerial.nvim'
 Plug 'numToStr/Comment.nvim'
-Plug 'nvim-mini/mini.bufremove'
-" Plug 'nvim-mini/mini.animate'
 Plug 'mhartington/formatter.nvim'
-Plug 'folke/which-key.nvim'
+
+" Git
+Plug 'lewis6991/gitsigns.nvim'
+" Plug 'tpope/vim-fugitive'
+Plug 'NeogitOrg/neogit'
+Plug 'sindrets/diffview.nvim'
+
+" Miscellaneous
+Plug 'tpope/vim-obsession'
 
 call plug#end()
 
