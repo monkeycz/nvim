@@ -664,23 +664,24 @@ inoremap <silent><leader>g <ESC>:call ActionMenuGitMenu()<CR>
 
 func! ActionMenuShortcutMenu()
   let l:items = [
-    \ { 'word': 'New Window', 'user_data': 'call feedkeys(":vs\<CR>")', 'shortcut': '1' },
-    \ { 'word': 'Close Window', 'user_data': 'call feedkeys(":close\<CR>")', 'shortcut': '2' },
+    \ { 'word': 'New Window', 'user_data': 'vs', 'shortcut': '1' },
+    \ { 'word': 'Close Window', 'user_data': 'close', 'shortcut': '2' },
     \ { 'separator': v:true },
-    \ { 'word': 'New File', 'user_data': 'call feedkeys(":enew\<CR>")', 'shortcut': '3' },
+    \ { 'word': 'New File', 'user_data': 'enew', 'shortcut': '3' },
     \ { 'separator': v:true },
-    \ { 'word': 'Toggle Terminal', 'user_data': 'call feedkeys(":ToggleTerm\<CR>")', 'shortcut': '4' },
-    \ { 'word': 'Toggle File Explorer', 'user_data': 'call feedkeys(":Neotree toggle\<CR>")', 'shortcut': '5' },
+    \ { 'word': 'Toggle File Explorer', 'user_data': 'Neotree toggle', 'shortcut': '4' },
+    \ { 'word': 'Toggle Find & Replace', 'user_data': 'lua require("spectre").toggle()', 'shortcut': '5' },
+    \ { 'word': 'Toggle Terminal', 'user_data': 'ToggleTerm', 'shortcut': '6' },
     \ { 'separator': v:true },
-    \ { 'word': 'Files List', 'user_data': 'call feedkeys(":CocList files\<CR>")', 'shortcut': '6' },
-    \ { 'word': 'Buffers List', 'user_data': 'call feedkeys(":CocList buffers\<CR>")', 'shortcut': '7' },
-    \ { 'word': 'Windows List', 'user_data': 'call feedkeys(":CocList windows\<CR>")', 'shortcut': '8' },
+    \ { 'word': 'Files List', 'user_data': 'CocList files', 'shortcut': '7' },
+    \ { 'word': 'Buffers List', 'user_data': 'CocList buffers', 'shortcut': '8' },
+    \ { 'word': 'Windows List', 'user_data': 'CocList windows', 'shortcut': '9' },
     \ { 'separator': v:true },
-    \ { 'word': 'Hide Highlight', 'user_data': 'call feedkeys(":nohlsearch\<CR>:pclose\<CR>")', 'shortcut': '9' },
+    \ { 'word': 'Hide Highlight', 'user_data': 'call feedkeys(":nohlsearch\<CR>:pclose\<CR>")', 'shortcut': '0' },
     \ { 'separator': v:true },
-    \ { 'word': 'Markdown Preview Start', 'user_data': 'call feedkeys(":LivePreview start\<CR>")', 'shortcut': 'a' },
-    \ { 'word': 'Markdown Preview Stop', 'user_data': 'call feedkeys(":LivePreview close\<CR>")', 'shortcut': 'b' },
-    \ { 'word': 'Markdown Preview Split', 'user_data': 'call feedkeys(":Markview splitToggle\<CR>")', 'shortcut': 'c' },
+    \ { 'word': 'Markdown Preview Start', 'user_data': 'LivePreview start', 'shortcut': 'a' },
+    \ { 'word': 'Markdown Preview Stop', 'user_data': 'LivePreview close', 'shortcut': 'b' },
+    \ { 'word': 'Markdown Preview Split', 'user_data': 'Markview splitToggle', 'shortcut': 'c' },
     \ ]
 
   call actionmenu#open(
