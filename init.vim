@@ -58,6 +58,10 @@ Plug 'lewis6991/gitsigns.nvim'
 Plug 'NeogitOrg/neogit'
 Plug 'sindrets/diffview.nvim'
 
+" Markdown
+Plug 'OXY2DEV/markview.nvim'
+Plug 'brianhuster/live-preview.nvim'
+
 " Miscellaneous
 Plug 'tpope/vim-obsession'
 
@@ -672,6 +676,10 @@ func! ActionMenuShortcutMenu()
     \ { 'word': 'Windows List', 'user_data': 'call feedkeys(":CocList windows\<CR>")', 'shortcut': '8' },
     \ { 'separator': v:true },
     \ { 'word': 'Hide Highlight', 'user_data': 'call feedkeys(":nohlsearch\<CR>:pclose\<CR>")', 'shortcut': '9' },
+    \ { 'separator': v:true },
+    \ { 'word': 'Markdown Preview Start', 'user_data': 'call feedkeys(":LivePreview start\<CR>")', 'shortcut': 'a' },
+    \ { 'word': 'Markdown Preview Stop', 'user_data': 'call feedkeys(":LivePreview close\<CR>")', 'shortcut': 'b' },
+    \ { 'word': 'Markdown Preview Split', 'user_data': 'call feedkeys(":Markview splitToggle\<CR>")', 'shortcut': 'c' },
     \ ]
 
   call actionmenu#open(
@@ -1019,6 +1027,20 @@ require("which-key").setup {}
 vim.keymap.set('n', '<leader>?', function()
     require("which-key").show({ global = false })
 end, { noremap = true, silent = true })
+
+EOF
+
+" -----------------------------------------------------------------------------
+" Markview Config
+" -----------------------------------------------------------------------------
+
+lua << EOF
+
+require("markview").setup {
+  preview = {
+    enable = false,
+  },
+}
 
 EOF
 
