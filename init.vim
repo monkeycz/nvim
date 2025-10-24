@@ -766,13 +766,13 @@ EOF
 " -----------------------------------------------------------------------------
 
 let g:coc_global_extensions = [
-\   'coc-lists', 
-\   'coc-tsserver',  
-\   'coc-json', 
-\   'coc-rust-analyzer', 
-\   'coc-pyright',  
-\   'coc-clangd',  
-\   'coc-lua',  
+\   'coc-lists',
+\   'coc-tsserver',
+\   'coc-json',
+\   'coc-rust-analyzer',
+\   'coc-pyright',
+\   'coc-clangd',
+\   'coc-lua',
 \ ]
 
 function! CheckBackspace() abort
