@@ -507,8 +507,12 @@ let g:tmuxline_theme = 'jellybeans'
 
 lua << EOF
 
+local bufremove = require('mini.bufremove')
+
 require("bufferline").setup {
     options = {
+        close_command = function(n) bufremove.delete(n, false) end,
+        right_mouse_command = function(n) bufremove.delete(n, false) end,
 		offsets = {
 			{
 				filetype = "neo-tree",
