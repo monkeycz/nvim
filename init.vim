@@ -513,6 +513,7 @@ require("bufferline").setup {
     options = {
         close_command = function(n) bufremove.delete(n, false) end,
         right_mouse_command = function(n) bufremove.delete(n, false) end,
+        numbers = "ordinal",
 		offsets = {
 			{
 				filetype = "neo-tree",
