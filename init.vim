@@ -352,9 +352,6 @@ require('neo-tree').setup {
         "edgy",
         "nofile",
         "neo-tree",
-        "target_hidden_message",
-        ".gitignore_hidden_message",
-        ".DS_Store_hidden_message",
     },
     window = {
         width = 30,
@@ -406,16 +403,14 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, {
 })
 
 local hidden_buffers = {
-    "target_hidden_message",
-    ".gitignore_hidden_message",
-    ".DS_Store_hidden_message",
+    "*_hidden_message",
 }
 
-vim.api.nvim_create_autocmd("FileType", {
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
     pattern = hidden_buffers,
     callback = function()
         vim.schedule(function()
-            vim.cmd("bd!")
+            vim.cmd("lua require('mini.bufremove').delete()")
         end)
     end,
 })
