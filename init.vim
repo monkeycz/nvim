@@ -963,7 +963,7 @@ EOF
 
 lua << EOF
 
-require("formatter").setup({
+require("formatter").setup {
   logging = true,
   log_level = vim.log.levels.WARN,
   filetype = {
@@ -1009,7 +1009,7 @@ require("formatter").setup({
       require("formatter.filetypes.any").remove_trailing_whitespace,
     },
   },
-})
+}
 
 -- auto format code when save file
 -- vim.api.nvim_exec([[
@@ -1063,14 +1063,14 @@ highlight SpectreReplace guibg=#C14953 guifg=#F8F8F2 gui=bold
 highlight SpectrePreview guibg=#3A3A3A guifg=#D8D8D2 gui=bold
 ]])
 
-require("spectre").setup({
+require("spectre").setup {
   highlight = {
     ui      = "String",
     search  = "SpectreSearch",
     replace = "SpectreReplace",
     preview = "SpectrePreview",
   },
-})
+}
 
 vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").toggle()<CR>', {
     desc = "Toggle Spectre"
