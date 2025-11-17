@@ -860,14 +860,14 @@ require('telescope').setup {
 require('telescope').load_extension('fzf')
 require('telescope').load_extension('ui-select')
 
-vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<cr>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<cr>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>fu', '<cmd>Telescope buffers<cr>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>fh', '<cmd>Telescope help_tags<cr>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>fo', '<cmd>Telescope oldfiles<cr>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>fs', '<cmd>Telescope git_status<cr>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>fc', '<cmd>Telescope git_commits<cr>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>fb', '<cmd>Telescope git_branches<cr>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<cr>', { noremap = true, silent = true, desc = "Files", })
+vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<cr>', { noremap = true, silent = true, desc = "Find in Files", })
+vim.keymap.set('n', '<leader>fu', '<cmd>Telescope buffers<cr>', { noremap = true, silent = true, desc = "Buffers" })
+vim.keymap.set('n', '<leader>fh', '<cmd>Telescope help_tags<cr>', { noremap = true, silent = true, desc = "Help Tags" })
+vim.keymap.set('n', '<leader>fo', '<cmd>Telescope oldfiles<cr>', { noremap = true, silent = true, desc = "Recent Files", })
+vim.keymap.set('n', '<leader>fs', '<cmd>Telescope git_status<cr>', { noremap = true, silent = true, desc = "Git Status", })
+vim.keymap.set('n', '<leader>fc', '<cmd>Telescope git_commits<cr>', { noremap = true, silent = true, desc = "Git Commits", })
+vim.keymap.set('n', '<leader>fb', '<cmd>Telescope git_branches<cr>', { noremap = true, silent = true, desc = "Git Branches", })
 
 EOF
 
@@ -886,7 +886,7 @@ require('neoclip').setup {
     preview = true,
 }
 
-vim.keymap.set("n", "<leader>fr", "<cmd>Telescope neoclip<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>fr", "<cmd>Telescope neoclip<CR>", { noremap = true, silent = true, desc = "Registers", })
 
 EOF
 
