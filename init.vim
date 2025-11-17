@@ -65,6 +65,7 @@ Plug 'brianhuster/live-preview.nvim'
 
 " Miscellaneous
 Plug 'tpope/vim-obsession'
+Plug 'rmagatti/auto-session'
 
 call plug#end()
 
@@ -1091,6 +1092,63 @@ vim.api.nvim_create_autocmd("FileType", {
     end, { buffer = true, silent = true })
   end,
 })
+
+EOF
+
+" -----------------------------------------------------------------------------
+" AutoSession Config
+" -----------------------------------------------------------------------------
+
+lua << EOF
+
+local function is_neotree_show()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    local ft = vim.api.nvim_buf_get_option(buf, "filetype")
+    if ft == "neo-tree" then
+      return true
+    end
+  end
+  return false
+end
+
+local last_neotree_show = false
+
+require("auto-session").setup {
+  auto_restore = false,
+  allowed_dirs = { "~/file/*", },
+  suppressed_dirs = { "~/", "~/Desktop", "~/Downloads", "~/file", "/" },
+  bypass_save_filetypes = {
+    "neo-tree",
+    "NvimTree",
+    "toggleterm",
+    "help",
+    "packer",
+    "TelescopePrompt",
+    "dapui_scopes",
+    "dapui_breakpoints",
+    "dapui_stacks",
+    "dapui_watches",
+  },
+  pre_restore_cmds = {
+    function(session_name)
+      last_neotree_show = is_neotree_show()
+      if last_neotree_show then
+          vim.cmd("Neotree close")
+      end
+    end,
+  },
+  post_restore_cmds = {
+    function(session_name)
+      if last_neotree_show then
+        vim.cmd("Neotree show")
+      end
+    end,
+  },
+}
+
+vim.keymap.set('n', '<leader>fe', '<cmd>AutoSession search<cr>', { noremap = true, silent = true, desc = "Sessions", })
+vim.keymap.set('n', '<leader>fd', '<cmd>AutoSession deletePicker<cr>', { noremap = true, silent = true, desc = "Delete Session", })
 
 EOF
 
