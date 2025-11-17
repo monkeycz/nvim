@@ -404,6 +404,8 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, {
     end
 })
 
+local bufremove = require('mini.bufremove')
+
 local hidden_buffers = {
     "*_hidden_message",
 }
@@ -412,7 +414,7 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
     pattern = hidden_buffers,
     callback = function()
         vim.schedule(function()
-            vim.cmd("lua require('mini.bufremove').delete()")
+            bufremove.delete()
         end)
     end,
 })
@@ -558,7 +560,7 @@ local function smart_close_buffer()
         vim.bo.bufhidden = 'wipe'
     end
 
-    require('mini.bufremove').delete(bufnr, false)
+    bufremove.delete(bufnr, false)
 end
 
 vim.keymap.set('n', '<leader>q', smart_close_buffer, { noremap = true, silent = true })
