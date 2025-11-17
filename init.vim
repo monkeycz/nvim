@@ -37,6 +37,7 @@ Plug 'stevearc/aerial.nvim'
 Plug 'monkeycz/actionmenu.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release' }
+Plug 'nvim-telescope/telescope-ui-select.nvim'
 Plug 'AckslD/nvim-neoclip.lua'
 Plug 'nvim-pack/nvim-spectre'
 
@@ -857,6 +858,7 @@ require('telescope').setup {
 }
 
 require('telescope').load_extension('fzf')
+require('telescope').load_extension('ui-select')
 
 vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<cr>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<cr>', { noremap = true, silent = true })
