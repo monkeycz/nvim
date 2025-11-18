@@ -20,6 +20,8 @@ Plug 'kkharji/sqlite.lua'
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 
 " UI Frame
+Plug 'goolord/alpha-nvim'
+" Plug 'MaximilianLloyd/ascii.nvim'
 " Plug 'romgrk/barbar.nvim'
 Plug 'akinsho/bufferline.nvim', { 'tag': '*' }
 Plug 'nvim-mini/mini.bufremove'
@@ -38,6 +40,7 @@ Plug 'monkeycz/actionmenu.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release' }
 Plug 'nvim-telescope/telescope-ui-select.nvim'
+Plug 'nvim-telescope/telescope-frecency.nvim'
 Plug 'AckslD/nvim-neoclip.lua'
 Plug 'nvim-pack/nvim-spectre'
 
@@ -399,7 +402,10 @@ require('neo-tree').setup {
 vim.api.nvim_create_autocmd({ "VimEnter" }, {
     callback = function(data)
         if vim.fn.argc(-1) == 0 then
-            vim.cmd("Neotree focus")
+            vim.defer_fn(function()
+                -- vim.cmd("Neotree focus")
+                vim.cmd("Neotree show")
+            end, 50)
         end
     end
 })
@@ -453,6 +459,67 @@ let g:airline#extensions#whitespace#enabled = 1
 
 let g:tmuxline_preset = 'full'
 let g:tmuxline_theme = 'jellybeans'
+
+" -----------------------------------------------------------------------------
+" Alpha Config
+" -----------------------------------------------------------------------------
+
+lua << EOF
+
+local dashboard = require('alpha.themes.dashboard')
+dashboard.section.header.val = {
+[[                           _]],
+[[                        _ooOoo_]],
+[[                       o8888888o]],
+[[                       88" . "88]],
+[[                       (| -_- |)]],
+[[                       O\  =  /O,]],
+[[                    ____/`---'\____]],
+[[                  .'  \\|     |//  `.]],
+[[                 /  \\|||  :  |||//  \]],
+[[                /  _||||| -:- |||||_  \]],
+[[                |   | \\\  -  /'| |   |]],
+[[                | \_|  `\`---'//  |_/ |]],
+[[                \  .-\__ `-. -'__/-.  /]],
+[[              ___`. .'  /--.--\  `. .'___]],
+[[           ."" '<  `.___\_<|>_/___.' _> \"".]],
+[[          | | :  `- \`. ;`. _/; .'/ /  .' ; |]],
+[[          \  \ `-.   \_\_`. _.'_/_/  -' _.' /]],
+[[===========`-.`___`-.__\ \___  /__.-'_.'_.-'===========]],
+}
+-- dashboard.section.header.val = require('ascii').get_random_global()
+-- dashboard.section.header.val = require('ascii').art.misc.krakens.krakedking
+dashboard.section.buttons.val = {
+    dashboard.button('f', '  ' .. 'Open File', ':Telescope find_files<CR>'),
+    -- dashboard.button('o', '  ' .. 'Recent Files', ':Telescope oldfiles<CR>'),
+    dashboard.button('o', '  ' .. 'Recent Files', ':Telescope frecency<CR>'),
+    dashboard.button('g', '󰈞  ' .. 'Find in Files', ':Telescope live_grep<CR>'),
+    dashboard.button('r', '  ' .. 'Restore Session', ':AutoSession restore<CR>'),
+    dashboard.button('s', '  ' .. 'Sessions', ':AutoSession search<CR>'),
+}
+dashboard.section.footer.val = {
+    "卍 南无阿弥陀佛 卍",
+    "卍 唵嘛呢叭咪吽 卍",
+}
+
+require('alpha').setup(dashboard.config)
+
+require('neo-tree.events').subscribe({
+  event = require('neo-tree.events').FILE_OPENED,
+  handler = function()
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      if vim.bo[buf].filetype == 'alpha' then
+        vim.schedule(function()
+          pcall(function()
+            vim.api.nvim_buf_delete(buf, { force = true })
+          end)
+        end)
+      end
+    end
+  end,
+})
+
+EOF
 
 " -----------------------------------------------------------------------------
 " Barbar Config
@@ -859,14 +926,18 @@ require('telescope').setup {
   }
 }
 
-require('telescope').load_extension('fzf')
-require('telescope').load_extension('ui-select')
+local telescope = require('telescope')
+
+telescope.load_extension('fzf')
+telescope.load_extension('ui-select')
+telescope.load_extension('frecency')
 
 vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<cr>', { noremap = true, silent = true, desc = "Files", })
 vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<cr>', { noremap = true, silent = true, desc = "Find in Files", })
 vim.keymap.set('n', '<leader>fu', '<cmd>Telescope buffers<cr>', { noremap = true, silent = true, desc = "Buffers" })
 vim.keymap.set('n', '<leader>fh', '<cmd>Telescope help_tags<cr>', { noremap = true, silent = true, desc = "Help Tags" })
-vim.keymap.set('n', '<leader>fo', '<cmd>Telescope oldfiles<cr>', { noremap = true, silent = true, desc = "Recent Files", })
+-- vim.keymap.set('n', '<leader>fo', '<cmd>Telescope oldfiles<cr>', { noremap = true, silent = true, desc = "Recent Files", })
+vim.keymap.set('n', '<leader>fo', '<cmd>Telescope frecency<cr>', { noremap = true, silent = true, desc = "Recent Files", })
 vim.keymap.set('n', '<leader>fs', '<cmd>Telescope git_status<cr>', { noremap = true, silent = true, desc = "Git Status", })
 vim.keymap.set('n', '<leader>fc', '<cmd>Telescope git_commits<cr>', { noremap = true, silent = true, desc = "Git Commits", })
 vim.keymap.set('n', '<leader>fb', '<cmd>Telescope git_branches<cr>', { noremap = true, silent = true, desc = "Git Branches", })
