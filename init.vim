@@ -50,7 +50,7 @@ Plug 's1n7ax/nvim-window-picker'
 Plug 'folke/which-key.nvim'
 
 " Language Support
-Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate', 'branch': 'master' }
 " run `:TSInstall vim vimdoc lua c rust python javascript toml markdown markdown_inline` `:TSUpdate`
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 " run `:CocInstall coc-lists coc-tsserver coc-json coc-rust-analyzer coc-pyright coc-clangd coc-lua`:CocUpdate`
