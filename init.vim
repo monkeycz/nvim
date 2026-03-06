@@ -494,6 +494,7 @@ dashboard.section.buttons.val = {
     -- dashboard.button('o', '  ' .. 'Recent Files', ':Telescope oldfiles<CR>'),
     dashboard.button('o', '  ' .. 'Recent Files', ':Telescope frecency<CR>'),
     dashboard.button('g', '󰈞  ' .. 'Find in Files', ':Telescope live_grep<CR>'),
+    dashboard.button('v', '  ' .. 'Git View', ':lua GitViewToggle()<CR>'),
     dashboard.button('r', '  ' .. 'Restore Session', ':AutoSession restore<CR>'),
     dashboard.button('s', '  ' .. 'Sessions', ':AutoSession search<CR>'),
 }
