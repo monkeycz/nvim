@@ -25,9 +25,7 @@ Plug 'goolord/alpha-nvim'
 " Plug 'romgrk/barbar.nvim'
 Plug 'akinsho/bufferline.nvim', { 'tag': '*' }
 Plug 'nvim-mini/mini.bufremove'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'edkolev/tmuxline.vim'
+Plug 'nvim-lualine/lualine.nvim'
 Plug 'nvim-neo-tree/neo-tree.nvim', { 'branch': 'v3.x' }
 " Plug 'nvim-tree/nvim-tree.lua'
 " Plug 'preservim/nerdtree'
@@ -442,23 +440,18 @@ nnoremap <silent><c-t> <Cmd>exe v:count1 . "ToggleTerm"<CR>
 inoremap <silent><c-t> <Esc><Cmd>exe v:count1 . "ToggleTerm"<CR>
 
 " -----------------------------------------------------------------------------
-" Airline Config
+" Lualine Config
 " -----------------------------------------------------------------------------
 
-"let g:airline_theme = 'desertink'
-"let g:airline_theme = 'atomic'
-"let g:airline_theme = 'papercolor'
-"let g:airline_theme = 'bubblegum'
-let g:airline_theme = 'catppuccin'
-let g:airline#extensions#branch#enabled = 1
-let g:airline#extensions#whitespace#enabled = 1
+lua << EOF
 
-" -----------------------------------------------------------------------------
-" Tmuxline Config
-" -----------------------------------------------------------------------------
+require('lualine').setup {
+  options = {
+    theme = 'auto'
+  }
+}
 
-let g:tmuxline_preset = 'full'
-let g:tmuxline_theme = 'jellybeans'
+EOF
 
 " -----------------------------------------------------------------------------
 " Alpha Config
