@@ -34,7 +34,7 @@ Plug 'stevearc/aerial.nvim'
 
 " UI Popup
 " Plug 'kizza/actionmenu.nvim'
-Plug 'monkeycz/actionmenu.nvim'
+" Plug 'monkeycz/actionmenu.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release' }
 Plug 'nvim-telescope/telescope-ui-select.nvim'
@@ -629,134 +629,134 @@ vim.keymap.set('n', '<leader>Q', '<Cmd>BufferLineCloseOthers<CR>', { noremap = t
 
 EOF
 
-" -----------------------------------------------------------------------------
-" ActionMenu Config
-" -----------------------------------------------------------------------------
-
-let s:code_actions = []
-
-func! ActionMenuCodeActionsCallback(index, item) abort
-  if a:index >= 0
-    let l:selected_code_action = s:code_actions[a:index]
-    let l:response = CocAction('doCodeAction', l:selected_code_action)
-  endif
-endfunc
-
-func! ActionMenuCodeActions() abort
-  if coc#float#has_float()
-    call coc#float#close_all()
-  endif
-
-  let s:code_actions = CocAction('codeActions')
-  let l:menu_items = map(copy(s:code_actions), { index, item -> item['title'] })
-  call actionmenu#open(l:menu_items, 'ActionMenuCodeActionsCallback')
-endfunc
-
-func! ActionMenuItemCallback(index, item)
-  if a:index >= 0
-    execute a:item['user_data']
-  endif
-endfunc
-
-func! ActionMenuCodeActionMenu()
-  let l:items = [
-    \ { 'word': 'Hover', 'user_data': 'call CocActionAsync("doHover")', 'shortcut': '1' },
-    \ { 'word': 'Definition', 'user_data': 'call CocAction("jumpDefinition")', 'shortcut': '2' },
-    \ { 'word': 'Type Definition', 'user_data': 'call CocAction("jumpTypeDefinition")', 'shortcut': '3' },
-    \ { 'word': 'References', 'user_data': 'call CocAction("jumpReferences")', 'shortcut': '4' },
-    \ { 'word': 'Code Actions', 'user_data': 'call ActionMenuCodeActions()', 'shortcut': '5' },
-    \ { 'word': 'Quickfix', 'user_data': 'call CocAction("doQuickfix")', 'shortcut': '6' },
-    \ { 'word': 'Rename', 'user_data': 'call CocActionAsync("rename")', 'shortcut': '7' },
-    \ { 'separator': v:true },
-    \ { 'word': 'OutLine', 'user_data': 'AerialToggle!', 'shortcut': '8' },
-    \ { 'separator': v:true },
-    \ { 'word': 'Format Code', 'user_data': 'Format', 'shortcut': '9' },
-    \ ]
-
-  call actionmenu#open(
-    \ l:items,
-    \ { index, item -> ActionMenuItemCallback(index, item) }
-    \ )
-endfunc
-
-nnoremap <silent><leader>; :call ActionMenuCodeActionMenu()<CR>
-inoremap <silent><leader>; <ESC>:call ActionMenuCodeActionMenu()<CR>
-
-lua << EOF
-
-local neogit = require('neogit')
-
-function GitViewToggle()
-  local tab = vim.api.nvim_get_current_tabpage()
-  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(tab)) do
-    local ok, buf = pcall(vim.api.nvim_win_get_buf, win)
-    if ok then
-        local name = vim.api.nvim_buf_get_name(buf)
-        -- vim.api.nvim_echo({{vim.inspect(name)}}, true, {})
-        if name:match("NeogitStatus") then
-          -- vim.api.nvim_win_close(win, true)
-          neogit.close()
-          return
-        elseif name:match("DiffviewFilePanel") or name:match("DiffviewFileHistoryPanel") then
-          vim.cmd("DiffviewClose")
-          return
-        end
-    end
-  end
-  neogit.open({ kind = "tab" })  -- "tab" / "replace" / "split"
-end
-
-EOF
-
-func! ActionMenuGitMenu()
-  let l:items = [
-    \ { 'word': 'Toggle Git View', 'user_data': 'lua GitViewToggle()', 'shortcut': '1' },
-    \ { 'word': 'Open Git Diff', 'user_data': 'DiffviewOpen', 'shortcut': '2' },
-    \ { 'word': 'Open Git History', 'user_data': 'DiffviewFileHistory', 'shortcut': '3' },
-    \ { 'separator': v:true },
-    \ { 'word': 'Goto Next Diff', 'user_data': 'Gitsigns next_hunk', 'shortcut': '4' },
-    \ { 'word': 'Goto Prev Diff', 'user_data': 'Gitsigns prev_hunk', 'shortcut': '5' },
-    \ ]
-
-  call actionmenu#open(
-    \ l:items,
-    \ { index, item -> ActionMenuItemCallback(index, item) }
-    \ )
-endfunc
-
-nnoremap <silent><leader>g :call ActionMenuGitMenu()<CR>
-inoremap <silent><leader>g <ESC>:call ActionMenuGitMenu()<CR>
-
-func! ActionMenuShortcutMenu()
-  let l:items = [
-    \ { 'word': 'New Window', 'user_data': 'vs', 'shortcut': '1' },
-    \ { 'word': 'Close Window', 'user_data': 'close', 'shortcut': '2' },
-    \ { 'separator': v:true },
-    \ { 'word': 'New File', 'user_data': 'enew', 'shortcut': '3' },
-    \ { 'separator': v:true },
-    \ { 'word': 'Toggle File Explorer', 'user_data': 'Neotree toggle', 'shortcut': '4' },
-    \ { 'word': 'Toggle Find & Replace', 'user_data': 'lua require("spectre").toggle()', 'shortcut': '5' },
-    \ { 'word': 'Toggle Terminal', 'user_data': 'ToggleTerm', 'shortcut': '6' },
-    \ { 'separator': v:true },
-    \ { 'word': 'Files List', 'user_data': 'CocList files', 'shortcut': '7' },
-    \ { 'word': 'Buffers List', 'user_data': 'CocList buffers', 'shortcut': '8' },
-    \ { 'word': 'Windows List', 'user_data': 'CocList windows', 'shortcut': '9' },
-    \ { 'separator': v:true },
-    \ { 'word': 'Hide Highlight', 'user_data': 'call feedkeys(":nohlsearch\<CR>:pclose\<CR>")', 'shortcut': '0' },
-    \ { 'separator': v:true },
-    \ { 'word': 'Markdown Preview Start', 'user_data': 'LivePreview start', 'shortcut': 'a' },
-    \ { 'word': 'Markdown Preview Stop', 'user_data': 'LivePreview close', 'shortcut': 'b' },
-    \ { 'word': 'Markdown Preview Split', 'user_data': 'Markview splitToggle', 'shortcut': 'c' },
-    \ ]
-
-  call actionmenu#open(
-    \ l:items,
-    \ { index, item -> ActionMenuItemCallback(index, item) }
-    \ )
-endfunc
-
-nnoremap <silent><leader>' :call ActionMenuShortcutMenu()<CR>
-inoremap <silent><leader>' <ESC>:call ActionMenuShortcutMenu()<CR>
+" " -----------------------------------------------------------------------------
+" " ActionMenu Config
+" " -----------------------------------------------------------------------------
+" 
+" let s:code_actions = []
+" 
+" func! ActionMenuCodeActionsCallback(index, item) abort
+"   if a:index >= 0
+"     let l:selected_code_action = s:code_actions[a:index]
+"     let l:response = CocAction('doCodeAction', l:selected_code_action)
+"   endif
+" endfunc
+" 
+" func! ActionMenuCodeActions() abort
+"   if coc#float#has_float()
+"     call coc#float#close_all()
+"   endif
+" 
+"   let s:code_actions = CocAction('codeActions')
+"   let l:menu_items = map(copy(s:code_actions), { index, item -> item['title'] })
+"   call actionmenu#open(l:menu_items, 'ActionMenuCodeActionsCallback')
+" endfunc
+" 
+" func! ActionMenuItemCallback(index, item)
+"   if a:index >= 0
+"     execute a:item['user_data']
+"   endif
+" endfunc
+" 
+" func! ActionMenuCodeActionMenu()
+"   let l:items = [
+"     \ { 'word': 'Hover', 'user_data': 'call CocActionAsync("doHover")', 'shortcut': '1' },
+"     \ { 'word': 'Definition', 'user_data': 'call CocAction("jumpDefinition")', 'shortcut': '2' },
+"     \ { 'word': 'Type Definition', 'user_data': 'call CocAction("jumpTypeDefinition")', 'shortcut': '3' },
+"     \ { 'word': 'References', 'user_data': 'call CocAction("jumpReferences")', 'shortcut': '4' },
+"     \ { 'word': 'Code Actions', 'user_data': 'call ActionMenuCodeActions()', 'shortcut': '5' },
+"     \ { 'word': 'Quickfix', 'user_data': 'call CocAction("doQuickfix")', 'shortcut': '6' },
+"     \ { 'word': 'Rename', 'user_data': 'call CocActionAsync("rename")', 'shortcut': '7' },
+"     \ { 'separator': v:true },
+"     \ { 'word': 'OutLine', 'user_data': 'AerialToggle!', 'shortcut': '8' },
+"     \ { 'separator': v:true },
+"     \ { 'word': 'Format Code', 'user_data': 'Format', 'shortcut': '9' },
+"     \ ]
+" 
+"   call actionmenu#open(
+"     \ l:items,
+"     \ { index, item -> ActionMenuItemCallback(index, item) }
+"     \ )
+" endfunc
+" 
+" nnoremap <silent><leader>; :call ActionMenuCodeActionMenu()<CR>
+" inoremap <silent><leader>; <ESC>:call ActionMenuCodeActionMenu()<CR>
+" 
+" lua << EOF
+" 
+" local neogit = require('neogit')
+" 
+" function GitViewToggle()
+"   local tab = vim.api.nvim_get_current_tabpage()
+"   for _, win in ipairs(vim.api.nvim_tabpage_list_wins(tab)) do
+"     local ok, buf = pcall(vim.api.nvim_win_get_buf, win)
+"     if ok then
+"         local name = vim.api.nvim_buf_get_name(buf)
+"         -- vim.api.nvim_echo({{vim.inspect(name)}}, true, {})
+"         if name:match("NeogitStatus") then
+"           -- vim.api.nvim_win_close(win, true)
+"           neogit.close()
+"           return
+"         elseif name:match("DiffviewFilePanel") or name:match("DiffviewFileHistoryPanel") then
+"           vim.cmd("DiffviewClose")
+"           return
+"         end
+"     end
+"   end
+"   neogit.open({ kind = "tab" })  -- "tab" / "replace" / "split"
+" end
+" 
+" EOF
+" 
+" func! ActionMenuGitMenu()
+"   let l:items = [
+"     \ { 'word': 'Toggle Git View', 'user_data': 'lua GitViewToggle()', 'shortcut': '1' },
+"     \ { 'word': 'Open Git Diff', 'user_data': 'DiffviewOpen', 'shortcut': '2' },
+"     \ { 'word': 'Open Git History', 'user_data': 'DiffviewFileHistory', 'shortcut': '3' },
+"     \ { 'separator': v:true },
+"     \ { 'word': 'Goto Next Diff', 'user_data': 'Gitsigns next_hunk', 'shortcut': '4' },
+"     \ { 'word': 'Goto Prev Diff', 'user_data': 'Gitsigns prev_hunk', 'shortcut': '5' },
+"     \ ]
+" 
+"   call actionmenu#open(
+"     \ l:items,
+"     \ { index, item -> ActionMenuItemCallback(index, item) }
+"     \ )
+" endfunc
+" 
+" nnoremap <silent><leader>g :call ActionMenuGitMenu()<CR>
+" inoremap <silent><leader>g <ESC>:call ActionMenuGitMenu()<CR>
+" 
+" func! ActionMenuShortcutMenu()
+"   let l:items = [
+"     \ { 'word': 'New Window', 'user_data': 'vs', 'shortcut': '1' },
+"     \ { 'word': 'Close Window', 'user_data': 'close', 'shortcut': '2' },
+"     \ { 'separator': v:true },
+"     \ { 'word': 'New File', 'user_data': 'enew', 'shortcut': '3' },
+"     \ { 'separator': v:true },
+"     \ { 'word': 'Toggle File Explorer', 'user_data': 'Neotree toggle', 'shortcut': '4' },
+"     \ { 'word': 'Toggle Find & Replace', 'user_data': 'lua require("spectre").toggle()', 'shortcut': '5' },
+"     \ { 'word': 'Toggle Terminal', 'user_data': 'ToggleTerm', 'shortcut': '6' },
+"     \ { 'separator': v:true },
+"     \ { 'word': 'Files List', 'user_data': 'CocList files', 'shortcut': '7' },
+"     \ { 'word': 'Buffers List', 'user_data': 'CocList buffers', 'shortcut': '8' },
+"     \ { 'word': 'Windows List', 'user_data': 'CocList windows', 'shortcut': '9' },
+"     \ { 'separator': v:true },
+"     \ { 'word': 'Hide Highlight', 'user_data': 'call feedkeys(":nohlsearch\<CR>:pclose\<CR>")', 'shortcut': '0' },
+"     \ { 'separator': v:true },
+"     \ { 'word': 'Markdown Preview Start', 'user_data': 'LivePreview start', 'shortcut': 'a' },
+"     \ { 'word': 'Markdown Preview Stop', 'user_data': 'LivePreview close', 'shortcut': 'b' },
+"     \ { 'word': 'Markdown Preview Split', 'user_data': 'Markview splitToggle', 'shortcut': 'c' },
+"     \ ]
+" 
+"   call actionmenu#open(
+"     \ l:items,
+"     \ { index, item -> ActionMenuItemCallback(index, item) }
+"     \ )
+" endfunc
+" 
+" nnoremap <silent><leader>' :call ActionMenuShortcutMenu()<CR>
+" inoremap <silent><leader>' <ESC>:call ActionMenuShortcutMenu()<CR>
 
 " -----------------------------------------------------------------------------
 " Window Picker Config
@@ -1218,6 +1218,221 @@ require("auto-session").setup {
 
 vim.keymap.set('n', '<leader>fe', '<cmd>AutoSession search<cr>', { noremap = true, silent = true, desc = "Sessions", })
 vim.keymap.set('n', '<leader>fd', '<cmd>AutoSession deletePicker<cr>', { noremap = true, silent = true, desc = "Delete Session", })
+
+EOF
+
+
+" -----------------------------------------------------------------------------
+" Action Menu Config
+" -----------------------------------------------------------------------------
+
+lua << EOF
+
+local Menu = require("nui.menu")
+
+--- create_action_menu() 
+--- @param title string
+--- @param items table
+--- @param position string|nil "cursor" (default, follow cursor) or "center" (screen center)
+local function create_action_menu(title, items, position)
+  position = position or "cursor"
+
+  local menu_lines = {}
+  local height = 0
+
+  for _, item in ipairs(items) do
+    if item.is_separator then
+      table.insert(menu_lines, Menu.separator())
+    else
+      table.insert(menu_lines, Menu.item(item.label, { 
+        cmd = item.cmd, 
+        action = item.action, 
+        shortcut = item.shortcut 
+      }))
+    end
+    height = height + 1
+  end
+
+  local menu_relative, menu_position
+  if position == "center" then
+    menu_relative = "editor"
+    menu_position = "50%"
+  else
+    menu_relative = "cursor"
+    menu_position = { row = 1, col = 0 }
+  end
+
+  local menu = Menu({
+    relative = menu_relative,
+    position = menu_position,
+    size = { width = 35, height = height },
+    border = {
+      style = "rounded",
+      text = { top = " " .. title .. " ", top_align = "center" },
+    },
+    win_options = { winhighlight = "Normal:Normal,FloatBorder:FloatBorder" },
+  }, {
+    lines = menu_lines,
+    max_width = 60,
+    keymap = {
+      focus_next = { "j", "<Down>", "<Tab>" },
+      focus_prev = { "k", "<Up>", "<S-Tab>" },
+      close = { "<Esc>", "<C-c>" },
+      submit = { "<CR>", "<Space>" },
+    },
+    on_submit = function(item)
+      vim.schedule(function()
+        if item.action then
+          item.action()
+        elseif item.cmd then
+          vim.cmd(item.cmd)
+        end
+      end)
+    end,
+  })
+
+  for _, item in ipairs(items) do
+    if not item.is_separator and item.shortcut then
+      menu:map("n", item.shortcut, function()
+        menu:unmount()
+        vim.schedule(function()
+          if item.action then
+            item.action()
+          elseif item.cmd then
+            vim.cmd(item.cmd)
+          end
+        end)
+      end, { noremap = true, nowait = true })
+    end
+  end
+
+  menu:mount()
+end
+
+-------------------------------------------------------------------------------
+-- 1. Code Menu (<leader>;)
+-------------------------------------------------------------------------------
+local function open_dynamic_code_actions()
+  if vim.fn['coc#float#has_float']() == 1 then
+    vim.fn['coc#float#close_all']()
+  end
+
+  local actions = vim.fn.CocAction('codeActions')
+  
+  if not actions or #actions == 0 then
+    print("No code actions available")
+    return
+  end
+
+  local dynamic_items = {}
+  local shortcuts = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e"}
+  
+  for i, action in ipairs(actions) do
+    local shortcut = shortcuts[i] or tostring(i)
+    table.insert(dynamic_items, {
+      label = string.format("%s. %s", shortcut, action.title),
+      shortcut = shortcut,
+      action = function()
+        vim.fn.CocAction('doCodeAction', action)
+      end
+    })
+  end
+
+  create_action_menu("Code Actions", dynamic_items)
+end
+
+local function open_code_menu()
+  create_action_menu("Code Menu", {
+    { label = "1. Hover", cmd = "call CocActionAsync('doHover')", shortcut = "1" },
+    { label = "2. Definition", cmd = "call CocAction('jumpDefinition')", shortcut = "2" },
+    { label = "3. Type Definition", cmd = "call CocAction('jumpTypeDefinition')", shortcut = "3" },
+    { label = "4. References", cmd = "call CocAction('jumpReferences')", shortcut = "4" },
+    { label = "5. Code Actions", action = open_dynamic_code_actions, shortcut = "5" },
+    { label = "6. Quickfix", cmd = "call CocAction('doQuickfix')", shortcut = "6" },
+    { label = "7. Rename", cmd = "call CocActionAsync('rename')", shortcut = "7" },
+    { is_separator = true },
+    { label = "8. OutLine", cmd = "AerialToggle!", shortcut = "8" },
+    { is_separator = true },
+    { label = "9. Format Code", cmd = "Format", shortcut = "9" },
+  })
+end
+
+vim.keymap.set({'n', 'i'}, '<leader>;', function()
+  if vim.fn.mode() == 'i' then vim.cmd('stopinsert') end
+  open_code_menu()
+end, { noremap = true, silent = true, desc = "Code Menu" })
+
+-------------------------------------------------------------------------------
+-- 2. Git Menu (<leader>g)
+-------------------------------------------------------------------------------
+function GitViewToggle()
+  local neogit = require('neogit')
+  local tab = vim.api.nvim_get_current_tabpage()
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(tab)) do
+    local ok, buf = pcall(vim.api.nvim_win_get_buf, win)
+    if ok then
+        local name = vim.api.nvim_buf_get_name(buf)
+        if name:match("NeogitStatus") then
+          neogit.close()
+          return
+        elseif name:match("DiffviewFilePanel") or name:match("DiffviewFileHistoryPanel") then
+          vim.cmd("DiffviewClose")
+          return
+        end
+    end
+  end
+  neogit.open({ kind = "tab" })
+end
+
+local function open_git_menu()
+  create_action_menu("Git Menu", {
+    { label = "1. Toggle Git View", cmd = "lua GitViewToggle()", shortcut = "1" },
+    { label = "2. Open Git Diff", cmd = "DiffviewOpen", shortcut = "2" },
+    { label = "3. Open Git History", cmd = "DiffviewFileHistory", shortcut = "3" },
+    { is_separator = true },
+    { label = "4. Goto Next Diff", cmd = "Gitsigns next_hunk", shortcut = "4" },
+    { label = "5. Goto Prev Diff", cmd = "Gitsigns prev_hunk", shortcut = "5" },
+    { is_separator = true },
+    { label = "6. Stage Hunk", cmd = "Gitsigns stage_hunk", shortcut = "6" },
+    { label = "7. Reset Hunk", cmd = "Gitsigns reset_hunk", shortcut = "7" },
+  })
+end
+
+vim.keymap.set({'n', 'i'}, '<leader>g', function()
+  if vim.fn.mode() == 'i' then vim.cmd('stopinsert') end
+  open_git_menu()
+end, { noremap = true, silent = true, desc = "Git Menu" })
+
+-------------------------------------------------------------------------------
+-- 3. Shortcut Menu (<leader>')
+-------------------------------------------------------------------------------
+local function open_shortcut_menu()
+  create_action_menu("Shortcut Menu", {
+    { label = "1. New Window", cmd = "vs", shortcut = "1" },
+    { label = "2. Close Window", cmd = "close", shortcut = "2" },
+    { is_separator = true },
+    { label = "3. New File", cmd = "enew", shortcut = "3" },
+    { is_separator = true },
+    { label = "4. Toggle File Explorer", cmd = "Neotree toggle", shortcut = "4" },
+    { label = "5. Toggle Find & Replace", cmd = "lua require('spectre').toggle()", shortcut = "5" },
+    { label = "6. Toggle Terminal", cmd = "ToggleTerm", shortcut = "6" },
+    { is_separator = true },
+    { label = "7. Files List", cmd = "CocList files", shortcut = "7" },
+    { label = "8. Buffers List", cmd = "CocList buffers", shortcut = "8" },
+    { label = "9. Windows List", cmd = "CocList windows", shortcut = "9" },
+    { is_separator = true },
+    { label = "0. Hide Highlight", cmd = "nohlsearch | pclose", shortcut = "0" },
+    { is_separator = true },
+    { label = "a. Markdown Preview Start", cmd = "LivePreview start", shortcut = "a" },
+    { label = "b. Markdown Preview Stop", cmd = "LivePreview close", shortcut = "b" },
+    { label = "c. Markdown Preview Split", cmd = "Markview splitToggle", shortcut = "c" },
+  }, "center")
+end
+
+vim.keymap.set({'n', 'i'}, "<leader>'", function()
+  if vim.fn.mode() == 'i' then vim.cmd('stopinsert') end
+  open_shortcut_menu()
+end, { noremap = true, silent = true, desc = "Shortcut Menu" })
 
 EOF
 
