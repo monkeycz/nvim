@@ -53,7 +53,8 @@ Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate', 'branch': 'master' 
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 " run `:CocInstall coc-lists coc-tsserver coc-json coc-rust-analyzer coc-pyright coc-clangd coc-lua`:CocUpdate`
 Plug 'numToStr/Comment.nvim'
-Plug 'mhartington/formatter.nvim'
+" Plug 'mhartington/formatter.nvim'
+Plug 'stevearc/conform.nvim'
 
 " Git
 Plug 'lewis6991/gitsigns.nvim'
@@ -1022,69 +1023,99 @@ EOF
 "
 " EOF
 
+" " -----------------------------------------------------------------------------
+" " Formatter Config
+" " -----------------------------------------------------------------------------
+" 
+" lua << EOF
+" 
+" require("formatter").setup {
+"   logging = true,
+"   log_level = vim.log.levels.WARN,
+"   filetype = {
+"     lua = {
+"       require("formatter.filetypes.lua").stylua,
+"     },
+" 
+"     python = {
+"       require("formatter.filetypes.python").black,
+"       -- require("formatter.filetypes.python").autopep8,
+"     },
+" 
+"     rust = {
+"       require("formatter.filetypes.rust").rustfmt,
+"     },
+" 
+"     c = {
+"       require("formatter.filetypes.c").clangformat,
+"     },
+" 
+"     javascript = {
+"       require("formatter.filetypes.javascript").prettier,
+"     },
+"     json = {
+"       require("formatter.filetypes.json").prettier,
+"     },
+" 
+"     toml = {
+"       require("formatter.filetypes.toml").taplo,
+"     },
+" 
+"     vim = {
+"       function()
+"         return {
+"           exe = "vim",
+"           args = { "-E", "-s", "-", "+normal! gg=G" },
+"           stdin = true,
+"         }
+"       end,
+"     },
+" 
+"     ["*"] = {
+"       require("formatter.filetypes.any").remove_trailing_whitespace,
+"     },
+"   },
+" }
+" 
+" -- auto format code when save file
+" -- vim.api.nvim_exec([[
+" --   augroup FormatAutogroup
+" --     autocmd!
+" --     autocmd BufWritePost * silent! FormatWrite
+" --   augroup END
+" -- ]], true)
+" 
+" -- vim.api.nvim_set_keymap("n", "<leader>m", ":Format<CR>", { noremap = true, silent = true })
+" 
+" EOF
+
 " -----------------------------------------------------------------------------
 " Formatter Config
 " -----------------------------------------------------------------------------
 
 lua << EOF
 
-require("formatter").setup {
-  logging = true,
-  log_level = vim.log.levels.WARN,
-  filetype = {
-    lua = {
-      require("formatter.filetypes.lua").stylua,
-    },
-
-    python = {
-      require("formatter.filetypes.python").black,
-      -- require("formatter.filetypes.python").autopep8,
-    },
-
-    rust = {
-      require("formatter.filetypes.rust").rustfmt,
-    },
-
-    c = {
-      require("formatter.filetypes.c").clangformat,
-    },
-
-    javascript = {
-      require("formatter.filetypes.javascript").prettier,
-    },
-    json = {
-      require("formatter.filetypes.json").prettier,
-    },
-
-    toml = {
-      require("formatter.filetypes.toml").taplo,
-    },
-
-    vim = {
-      function()
-        return {
-          exe = "vim",
-          args = { "-E", "-s", "-", "+normal! gg=G" },
-          stdin = true,
-        }
-      end,
-    },
-
-    ["*"] = {
-      require("formatter.filetypes.any").remove_trailing_whitespace,
-    },
+require("conform").setup({
+  formatters_by_ft = {
+    lua = { "stylua" },
+    python = { "black" },
+    rust = { "rustfmt" },
+    c = { "clang-format" },
+    javascript = { "prettier" },
+    json = { "prettier" },
+    toml = { "taplo" },
+    ["_"] = { "trim_whitespace" },
   },
-}
+  -- Auto format code when save file
+  -- format_on_save = {
+  --   timeout_ms = 500,
+  --   lsp_format = "fallback",
+  -- },
+})
 
--- auto format code when save file
--- vim.api.nvim_exec([[
---   augroup FormatAutogroup
---     autocmd!
---     autocmd BufWritePost * silent! FormatWrite
---   augroup END
--- ]], true)
-
--- vim.api.nvim_set_keymap("n", "<leader>m", ":Format<CR>", { noremap = true, silent = true })
+vim.api.nvim_create_user_command("Format", function()
+  require("conform").format({ async = true, lsp_format = "fallback" })
+end, { desc = "Format current buffer with conform" })
 
 EOF
 
