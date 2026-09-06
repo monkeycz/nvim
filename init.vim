@@ -48,7 +48,7 @@ Plug 's1n7ax/nvim-window-picker'
 Plug 'folke/which-key.nvim'
 
 " Language Support
-Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate', 'branch': 'master' }
+Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
 " run `:TSInstall vim vimdoc lua c rust python javascript toml markdown markdown_inline` `:TSUpdate`
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 " run `:CocInstall coc-lists coc-tsserver coc-json coc-rust-analyzer coc-pyright coc-clangd coc-lua`:CocUpdate`
@@ -807,23 +807,40 @@ EOF
 
 lua << EOF
 
-require('nvim-treesitter.configs').setup {
-    ensure_installed = { "vim", "vimdoc", "lua", "c", "rust", "python", "javascript", "toml", "markdown", "markdown_inline" },
-    sync_install = false,
-    auto_install = true,
-    highlight = {
-        enable = true,
-        additional_vim_regex_highlighting = false,
-    },
-    incremental_selection = {
-        enable = true,
-        keymaps = {
-            init_selection = "gnn",
-            node_incremental = "grn",
-            node_decremental = "grm",
-        },
-    },
-}
+-- Config for `master` branch
+-- require('nvim-treesitter.configs').setup {
+--     ensure_installed = { "vim", "vimdoc", "lua", "c", "rust", "python", "javascript", "toml", "markdown", "markdown_inline" },
+--     sync_install = false,
+--     auto_install = true,
+--     highlight = {
+--         enable = true,
+--         additional_vim_regex_highlighting = false,
+--     },
+--     incremental_selection = {
+--         enable = true,
+--         keymaps = {
+--             init_selection = "gnn",
+--             node_incremental = "grn",
+--             node_decremental = "grm",
+--         },
+--     },
+-- }
+
+-- Config for `main` branch
+require('nvim-treesitter').setup()
+
+require('nvim-treesitter').install({
+    "vim", "vimdoc", "lua", "c", "rust", "python", 
+    "javascript", "toml", "markdown", "markdown_inline"
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+    group = vim.api.nvim_create_augroup("TreesitterSetup", { clear = true }),
+    callback = function(args)
+        pcall(vim.treesitter.start, args.buf)
+        vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end,
+})
 
 EOF
 
