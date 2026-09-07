@@ -35,8 +35,8 @@ Plug 'stevearc/aerial.nvim'
 " UI Popup
 " Plug 'kizza/actionmenu.nvim'
 " Plug 'monkeycz/actionmenu.nvim'
-Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
-Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release' }
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '*' }
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-telescope/telescope-ui-select.nvim'
 Plug 'nvim-telescope/telescope-frecency.nvim'
 Plug 'AckslD/nvim-neoclip.lua'
